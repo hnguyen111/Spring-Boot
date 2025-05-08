@@ -1,6 +1,7 @@
 package com.example.spring_proj.service;
 
 import com.example.spring_proj.entities.Student;
+import com.example.spring_proj.exceptions.NotFoundException;
 import com.example.spring_proj.repository.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,19 +19,18 @@ public class StudentService {
 
     public Student addStudent(Student student) {
         Student addedStudent = this.studentRepo.save(student);
-        return  addedStudent;
+        return addedStudent;
     }
 
     public Student getStudentById(long studentId) {
         Optional<Student> student = this.studentRepo.findById(studentId);
-        return student.orElse(null);
+        return student.orElseThrow(() -> {
+            return new NotFoundException("Student with ID " + studentId + " is not found.");
+        });
     }
 
     public Student updateStudent(Student student) {
         Student existingStudent = this.getStudentById(student.getId());
-        if (existingStudent == null) {
-            return null;
-        }
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
         return this.studentRepo.save(student);

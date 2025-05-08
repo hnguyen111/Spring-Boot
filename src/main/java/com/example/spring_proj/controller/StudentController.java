@@ -1,12 +1,18 @@
 package com.example.spring_proj.controller;
 
 import com.example.spring_proj.entities.Student;
+import com.example.spring_proj.exceptions.NotFoundException;
 import com.example.spring_proj.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
+@RequestMapping("/student")
 public class StudentController {
 
     private final StudentService studentService;
@@ -16,25 +22,43 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @PostMapping("/student/add")
-    public Student addStudent(@RequestBody @Valid Student student) {
-        return this.studentService.addStudent(student);
-    }
-
-    @GetMapping("/student/{sid}")
-    public Student getStudentById(@PathVariable(name = "sid") long studentId) {
-        return this.studentService.getStudentById(studentId);
-    }
-
-    @PutMapping("/student/{studentId}")
-    public Student updateStudent(@PathVariable long studentId, @RequestBody Student student) {
-        if (studentId != student.getId()) {
-            // Throw some error
+    @PostMapping("/add")
+    public ResponseEntity<?> addStudent(@RequestBody @Valid Student student) {
+        try {
+            return ResponseEntity.ok(this.studentService.addStudent(student));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
         }
-        return this.studentService.updateStudent(student);
     }
 
-    @DeleteMapping("/student/{studentId}")
+    @GetMapping("/{sid}")
+    public ResponseEntity<?> getStudentById(@PathVariable(name = "sid") long studentId) {
+        try {
+            Student student = this.studentService.getStudentById(studentId);
+            return ResponseEntity.ok(student);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/{studentId}")
+    public ResponseEntity<?> updateStudent(@PathVariable long studentId, @RequestBody @Valid Student student) {
+        try {
+            if (studentId != student.getId()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "The ID in the path does not match the ID in the request body."));
+            }
+            Student updatedStudent = this.studentService.updateStudent(student);
+            return ResponseEntity.ok(updatedStudent);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{studentId}")
     public void deleteStudentById(@PathVariable long studentId) {
         this.studentService.deleteStudentById(studentId);
     }
