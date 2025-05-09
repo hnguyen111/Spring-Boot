@@ -26,7 +26,7 @@ public class StudentService {
     public Student getStudentById(long studentId) {
         Optional<Student> student = this.studentRepo.findById(studentId);
         return student.orElseThrow(() -> {
-            return new NotFoundException("Student with ID " + studentId + " is not found.");
+            return new NotFoundException("Student with ID " + studentId + " not found.");
         });
     }
 

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/course")
 public class CourseController {
@@ -27,7 +29,11 @@ public class CourseController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addCourse(@RequestBody @Valid CourseDto courseDto) {
-        Course course = this.courseMapper.mapToModel(courseDto);
-        return new ResponseEntity<>(this.courseService.addCourse(course), HttpStatus.CREATED);
+        try {
+            Course course = this.courseMapper.mapToModel(courseDto);
+            return new ResponseEntity<>(this.courseService.addCourse(course), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+        }
     }
 }

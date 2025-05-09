@@ -20,6 +20,6 @@ public class MentorService {
     }
 
     public Mentor getMentorById(long mentorId) {
-        return this.mentorRepo.findById(mentorId).orElseThrow(() -> new NotFoundException("Cannot find a mentor with ID " + mentorId));
+        return this.mentorRepo.findById(mentorId).orElseThrow(() -> new NotFoundException("Mentor with ID " + mentorId + " not found."));
     }
 }
