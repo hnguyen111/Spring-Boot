@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "mentor")
-//@NoArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class Mentor {
