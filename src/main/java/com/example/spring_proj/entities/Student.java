@@ -1,6 +1,7 @@
 package com.example.spring_proj.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,4 +23,11 @@ public class Student {
      @Column(name = "last_name", nullable = false)
      @NotBlank(message = "Last Name must not be null.")
      private String lastName;
+
+     @Column(name = "email", nullable = false, unique = true)
+     @Email
+     private String email;
+
+     @Column(name = "password", nullable = false)
+     private String password;
 }

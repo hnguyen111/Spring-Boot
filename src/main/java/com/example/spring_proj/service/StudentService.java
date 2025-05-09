@@ -33,6 +33,7 @@ public class StudentService {
         Student existingStudent = this.getStudentById(student.getId());
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
+        existingStudent.setEmail(student.getEmail());
         return this.studentRepo.save(student);
     }
 
