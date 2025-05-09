@@ -1,6 +1,7 @@
 package com.example.spring_proj.service;
 
 import com.example.spring_proj.entities.Course;
+import com.example.spring_proj.exceptions.NotFoundException;
 import com.example.spring_proj.repository.CourseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,6 @@ public class CourseService {
     }
 
     public Course getCourseById(long courseId) {
-        return this.courseRepo.findById(courseId).orElse(null);
+        return this.courseRepo.findById(courseId).orElseThrow(() -> new NotFoundException("Cannot find a course with ID " + courseId));
     }
 }

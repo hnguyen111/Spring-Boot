@@ -1,5 +1,6 @@
 package com.example.spring_proj.service;
 
+import com.example.spring_proj.dto.StudentDto;
 import com.example.spring_proj.entities.Student;
 import com.example.spring_proj.exceptions.NotFoundException;
 import com.example.spring_proj.repository.StudentRepo;
@@ -29,12 +30,21 @@ public class StudentService {
         });
     }
 
-    public Student updateStudent(Student student) {
-        Student existingStudent = this.getStudentById(student.getId());
-        existingStudent.setFirstName(student.getFirstName());
-        existingStudent.setLastName(student.getLastName());
-        existingStudent.setEmail(student.getEmail());
-        return this.studentRepo.save(student);
+    public Student updateStudent(long studentId, StudentDto studentDto) {
+        Student existingStudent = this.getStudentById(studentId);
+        if (studentDto.getFirstName() != null) {
+            existingStudent.setFirstName(studentDto.getFirstName());
+        }
+        if (studentDto.getLastName() != null) {
+            existingStudent.setLastName(studentDto.getLastName());
+        }
+        if (studentDto.getEmail() != null) {
+            existingStudent.setEmail(studentDto.getEmail());
+        }
+        if (studentDto.getPassword() != null) {
+            existingStudent.setPassword(studentDto.getPassword());
+        }
+        return this.studentRepo.save(existingStudent);
     }
 
     public void deleteStudentById(long studentId) {

@@ -1,6 +1,5 @@
 package com.example.spring_proj.dto;
 
-import com.example.spring_proj.entities.Mentor;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;

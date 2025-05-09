@@ -1,5 +1,6 @@
 package com.example.spring_proj.controller;
 
+import com.example.spring_proj.dto.StudentDto;
 import com.example.spring_proj.entities.Student;
 import com.example.spring_proj.exceptions.NotFoundException;
 import com.example.spring_proj.service.StudentService;
@@ -44,12 +45,9 @@ public class StudentController {
     }
 
     @PutMapping("/{studentId}")
-    public ResponseEntity<?> updateStudent(@PathVariable long studentId, @RequestBody @Valid Student student) {
+    public ResponseEntity<?> updateStudent(@PathVariable long studentId, @RequestBody @Valid StudentDto studentDto) {
         try {
-            if (studentId != student.getId()) {
-                return ResponseEntity.badRequest().body(Map.of("message", "The ID in the path does not match the ID in the request body."));
-            }
-            Student updatedStudent = this.studentService.updateStudent(student);
+            Student updatedStudent = this.studentService.updateStudent(studentId, studentDto);
             return ResponseEntity.ok(updatedStudent);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
